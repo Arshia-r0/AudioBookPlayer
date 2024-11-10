@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    //
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -56,4 +59,24 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    //
+    // dependencies //
+    // koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
+    // splashScreen
+    implementation(libs.androidx.core.splashscreen)
+    // navigation Compose
+    implementation(libs.androidx.navigation.compose)
+    //  serialization
+    implementation(libs.kotlinx.serialization.json)
+    // navigation compose
+    implementation(libs.androidx.navigation.compose)
+    // protoDataStore
+    implementation(libs.androidx.datastore.core)
+    //ktor
+    implementation(libs.koin.ktor)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
 }
