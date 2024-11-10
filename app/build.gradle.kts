@@ -79,4 +79,8 @@ dependencies {
     implementation(libs.koin.ktor)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
+    // media3
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.dash)
+    implementation(libs.androidx.media3.ui)
 }
