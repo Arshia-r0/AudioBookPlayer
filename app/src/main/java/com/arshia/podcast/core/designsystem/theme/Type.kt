@@ -1,4 +1,4 @@
-package com.arshia.podcast.ui.theme
+package com.arshia.podcast.core.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
