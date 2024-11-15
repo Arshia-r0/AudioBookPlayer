@@ -1,11 +1,11 @@
-package com.arshia.podcast.app.appstate
+package com.arshia.podcast.app.app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.arshia.podcast.core.network.NetworkMonitor
+import com.arshia.podcast.core.network.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

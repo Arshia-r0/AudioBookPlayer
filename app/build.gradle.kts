@@ -92,6 +92,9 @@ dependencies {
     //ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.auth)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.serialization.json)
     // media3
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.dash)

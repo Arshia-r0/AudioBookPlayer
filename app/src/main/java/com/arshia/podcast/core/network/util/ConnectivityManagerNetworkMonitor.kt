@@ -1,8 +1,7 @@
-package com.arshia.podcast.core.network
+package com.arshia.podcast.core.network.util
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest.Builder
@@ -25,7 +24,7 @@ class ConnectivityManagerNetworkMonitor(
             return@callbackFlow
         }
 
-        val callback = object : NetworkCallback() {
+        val callback = object : ConnectivityManager.NetworkCallback() {
 
             private val networks = mutableSetOf<Network>()
 

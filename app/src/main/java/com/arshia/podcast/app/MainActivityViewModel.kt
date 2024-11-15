@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class MainActivityViewModel(
-    userDataRepositoryImp: UserDataRepositoryImp
+    userDataRepositoryImp: UserDataRepositoryImp,
 ): ViewModel() {
 
     val uiState: StateFlow<MainActivityUiState> = userDataRepositoryImp.userData.map {

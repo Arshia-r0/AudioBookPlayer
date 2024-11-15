@@ -1,4 +1,4 @@
-package com.arshia.podcast.core.network
+package com.arshia.podcast.core.network.util
 
 import kotlinx.coroutines.flow.Flow
 
