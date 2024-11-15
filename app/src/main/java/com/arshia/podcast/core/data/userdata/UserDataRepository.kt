@@ -1,4 +1,4 @@
-package com.arshia.podcast.core.data
+package com.arshia.podcast.core.data.userdata
 
 import com.arshia.podcast.core.model.AppTheme
 import com.arshia.podcast.core.model.UserData

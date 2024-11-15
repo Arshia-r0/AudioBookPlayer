@@ -8,6 +8,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.headers
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -30,6 +32,9 @@ val networkModule = module {
         HttpClient(CIO) {
             defaultRequest {
                 url("https://localhost:8000/api")
+                headers {
+                    headers.append(HttpHeaders.Accept, "application/json")
+                }
             }
             install(ContentNegotiation) {
                 json(Json {

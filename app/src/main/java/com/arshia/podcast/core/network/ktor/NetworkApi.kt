@@ -1,17 +1,17 @@
 package com.arshia.podcast.core.network.ktor
 
-import kotlinx.serialization.json.Json
+import io.ktor.client.statement.HttpResponse
 
 interface NetworkApi {
 
-    suspend fun login(username: String, password: String): Json
+    suspend fun login(authParameters: AuthParameters): HttpResponse
 
-    suspend fun register(username: String, password: String): Json
+    suspend fun register(authParameters: AuthParameters): HttpResponse
 
-    suspend fun logout(): Json
+    suspend fun logout(): HttpResponse
 
-    suspend fun getBooks(): Json
+    suspend fun getBooks(): HttpResponse
 
-    suspend fun getBookDetails(): Json
+    suspend fun getBookDetails(): HttpResponse
 
 }

@@ -2,7 +2,7 @@ package com.arshia.podcast.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arshia.podcast.core.data.UserDataRepositoryImp
+import com.arshia.podcast.core.data.userdata.UserDataRepositoryImp
 import com.arshia.podcast.core.model.UserData
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

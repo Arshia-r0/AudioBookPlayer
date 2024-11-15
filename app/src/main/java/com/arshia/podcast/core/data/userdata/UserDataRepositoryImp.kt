@@ -1,6 +1,8 @@
-package com.arshia.podcast.core.data
+package com.arshia.podcast.core.data.userdata
 
+import com.arshia.podcast.core.data.auth.AuthToken
 import com.arshia.podcast.core.datastore.PodcastDataStore
+import com.arshia.podcast.core.model.AppTheme
 import com.arshia.podcast.core.model.UserData
 import kotlinx.coroutines.flow.Flow
 
@@ -10,10 +12,10 @@ class UserDataRepositoryImp(
 
     override val userData: Flow<UserData> = podcastDataStore.userData
 
-    override suspend fun setAppTheme(theme: com.arshia.podcast.core.model.AppTheme) =
+    override suspend fun setAppTheme(theme: AppTheme) =
         podcastDataStore.setAppTheme(theme)
 
-    override suspend fun setAuthToken(authToken: String?) =
+    override suspend fun setAuthToken(authToken: AuthToken?) =
         podcastDataStore.setAuthToken(authToken)
 
 }
