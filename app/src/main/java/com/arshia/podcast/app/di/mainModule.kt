@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val mainModule = module {
 
-    viewModelOf(::MainActivityViewModel)
+viewModelOf(::MainActivityViewModel)
 
 }

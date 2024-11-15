@@ -2,6 +2,7 @@ package com.arshia.podcast.app
 
 import android.app.Application
 import com.arshia.podcast.app.di.mainModule
+import com.arshia.podcast.core.data.di.dataModule
 import com.arshia.podcast.core.datastore.di.dataStoreModule
 import com.arshia.podcast.core.network.di.networkModule
 import com.arshia.podcast.feature.di.viewModelModule
@@ -22,6 +23,7 @@ class MainApplication: Application() {
                 viewModelModule,
                 networkModule,
                 dataStoreModule,
+                dataModule,
             )
         }
     }

@@ -88,7 +88,7 @@ dependencies {
     // navigation compose
     implementation(libs.androidx.navigation.compose)
     // protoDataStore
-    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.datastore)
     //ktor
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)

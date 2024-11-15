@@ -12,6 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.arshia.podcast.app.appstate.rememberPodcastAppState
 import com.arshia.podcast.core.designsystem.theme.PodcastTheme
 import com.arshia.podcast.core.network.NetworkMonitor
 import kotlinx.coroutines.flow.onEach
@@ -45,6 +46,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val appState = rememberPodcastAppState(networkMonitor)
             KoinAndroidContext {
                 if(uiState is MainActivityUiState.Success) {
                     uiState = uiState as MainActivityUiState.Success
