@@ -1,6 +1,6 @@
 package com.arshia.podcast.core.model
 
-import com.arshia.podcast.core.data.auth.AuthToken
+import com.arshia.podcast.core.data.networkapi.auth.AuthToken
 import kotlinx.serialization.Serializable
 
 

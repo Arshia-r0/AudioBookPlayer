@@ -1,4 +1,4 @@
-package com.arshia.podcast.core.data.book
+package com.arshia.podcast.core.data.networkapi.book
 
 import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.core.model.Episode

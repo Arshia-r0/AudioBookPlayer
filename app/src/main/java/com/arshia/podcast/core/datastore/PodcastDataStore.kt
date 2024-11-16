@@ -1,7 +1,7 @@
 package com.arshia.podcast.core.datastore
 
 import androidx.datastore.core.DataStore
-import com.arshia.podcast.core.data.auth.AuthToken
+import com.arshia.podcast.core.data.networkapi.auth.AuthToken
 import com.arshia.podcast.core.model.AppTheme
 import com.arshia.podcast.core.model.UserData
 import kotlinx.coroutines.flow.map
