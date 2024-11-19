@@ -4,14 +4,11 @@ import kotlinx.serialization.Serializable
 
 interface PodcastRoutes {
     @Serializable
-    object AuthRoute {
-        @Serializable
-        object LoginRoute
-
-        @Serializable
-        object SignupRoute
-    }
+    object AuthRoute
 
     @Serializable
     object MainRoute
+    
+    @Serializable
+    object PLayerRoute
 }
