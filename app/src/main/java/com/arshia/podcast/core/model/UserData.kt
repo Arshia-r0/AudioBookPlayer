@@ -1,8 +1,6 @@
 package com.arshia.podcast.core.model
 
-import com.arshia.podcast.core.data.auth.AuthToken
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class UserData(

@@ -1,4 +1,4 @@
-package com.arshia.podcast.core.network.ktor
+package com.arshia.podcast.core.model
 
 data class AuthParameters(
     val username: String,

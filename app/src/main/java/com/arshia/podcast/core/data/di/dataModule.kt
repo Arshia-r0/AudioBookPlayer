@@ -1,9 +1,9 @@
 package com.arshia.podcast.core.data.di
 
-import com.arshia.podcast.core.data.auth.AuthRepository
-import com.arshia.podcast.core.data.auth.KtorAuthRepository
-import com.arshia.podcast.core.data.book.BookRepository
-import com.arshia.podcast.core.data.book.KtorBookRepository
+import com.arshia.podcast.core.data.networkapi.auth.AuthRepository
+import com.arshia.podcast.core.data.networkapi.auth.KtorAuthRepository
+import com.arshia.podcast.core.data.networkapi.book.BookRepository
+import com.arshia.podcast.core.data.networkapi.book.KtorBookRepository
 import com.arshia.podcast.core.data.userdata.UserDataRepository
 import com.arshia.podcast.core.data.userdata.UserDataRepositoryImp
 import org.koin.core.module.dsl.bind
