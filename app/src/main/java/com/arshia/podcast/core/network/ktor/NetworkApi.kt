@@ -1,5 +1,6 @@
 package com.arshia.podcast.core.network.ktor
 
+import com.arshia.podcast.core.model.AuthParameters
 import io.ktor.client.statement.HttpResponse
 
 interface NetworkApi {

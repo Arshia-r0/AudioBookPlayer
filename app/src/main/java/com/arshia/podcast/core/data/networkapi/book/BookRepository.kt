@@ -1,14 +1,15 @@
 package com.arshia.podcast.core.data.networkapi.book
 
-import com.arshia.podcast.core.model.Book
-import com.arshia.podcast.core.model.Episode
+import com.arshia.podcast.core.common.Resource
+import com.arshia.podcast.core.model.BookDetailsResponse
+import com.arshia.podcast.core.model.BookResponse
+import kotlinx.coroutines.flow.Flow
 
-typealias BookId = Int
 
 interface BookRepository {
 
-    suspend fun getBooks(): Map<BookId, Book>
+    suspend fun getBooks(): Flow<Resource<BookResponse>>
 
-    suspend fun getEpisodes(bookId: Int): List<Episode>
+    suspend fun getBookDetails(bookId: Int): Flow<Resource<BookDetailsResponse>>
 
 }

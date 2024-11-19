@@ -7,8 +7,8 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-fun <T> getNetworkResponse(
-    networkCall: () -> HttpResponse
+inline fun <reified T> getSerializedResource(
+    crossinline networkCall: suspend () -> HttpResponse
 ): Flow<Resource<T>> = flow {
     emit((Resource.Loading()))
     val response = networkCall()
