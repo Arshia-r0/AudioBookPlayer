@@ -14,6 +14,6 @@ inline fun <reified T> getSerializedResource(
     val response = networkCall()
     emit(
         if(response.status == HttpStatusCode.OK) Resource.Success<T>(response.body())
-        else Resource.Error()
+        else Resource.Error(message = response.body())
     )
 }

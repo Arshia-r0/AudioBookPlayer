@@ -11,8 +11,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.arshia.podcast.app.app.PodcastApp
 import com.arshia.podcast.app.app.rememberPodcastAppState
+import com.arshia.podcast.app.navigation.PodcastNavigation
 import com.arshia.podcast.core.designsystem.theme.PodcastTheme
 import com.arshia.podcast.core.network.util.NetworkMonitor
 import kotlinx.coroutines.flow.onEach
@@ -52,9 +52,9 @@ class MainActivity : ComponentActivity() {
                     PodcastTheme(
                         theme = (uiState as MainActivityUiState.Success).data.theme
                     ) {
-                        PodcastApp(
+                        PodcastNavigation(
                             appState = appState,
-                            viewModel = viewModel,
+                            uiState = uiState as MainActivityUiState.Success
                         )
                     }
                 }
