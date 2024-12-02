@@ -31,7 +31,7 @@ val networkModule = module {
     single {
         HttpClient(CIO) {
             defaultRequest {
-                url("https://localhost:8000/api")
+                url("http://10.0.2.2:8000/api/")
                 headers {
                     headers.append(HttpHeaders.Accept, "application/json")
                 }

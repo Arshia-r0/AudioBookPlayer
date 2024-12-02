@@ -13,6 +13,6 @@ interface NetworkApi {
 
     suspend fun getBooks(): HttpResponse
 
-    suspend fun getBookDetails(): HttpResponse
+    suspend fun getBookDetails(id: Int): HttpResponse
 
 }

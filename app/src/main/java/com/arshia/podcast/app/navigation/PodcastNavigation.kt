@@ -13,11 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import com.arshia.podcast.app.MainActivityUiState
 import com.arshia.podcast.app.app.PodcastAppState
-import com.arshia.podcast.feature.auth.AuthScreen
+import com.arshia.podcast.feature.login.LoginScreen
 import com.arshia.podcast.feature.main.MainScreen
 import com.arshia.podcast.feature.player.PlayerScreen
+import com.arshia.podcast.feature.register.RegisterScreen
 
 @Composable
 fun PodcastNavigation(
@@ -46,8 +48,19 @@ fun PodcastNavigation(
             else PodcastRoutes.MainRoute,
             modifier = Modifier.padding(ip)
         ) {
-            composable<PodcastRoutes.AuthRoute> {
-                AuthScreen()
+            navigation<PodcastRoutes.AuthRoute>(
+                startDestination = PodcastRoutes.AuthRoute.LoginRoute
+            ) {
+                composable<PodcastRoutes.AuthRoute.RegisterRoute> {
+                    RegisterScreen(
+                        toLoginScreen = { navController.navigate(PodcastRoutes.AuthRoute.LoginRoute) }
+                    )
+                }
+                composable<PodcastRoutes.AuthRoute.LoginRoute> {
+                    LoginScreen(
+                        toRegisterScreen = { navController.navigate(PodcastRoutes.AuthRoute.RegisterRoute) }
+                    )
+                }
             }
             composable<PodcastRoutes.MainRoute> {
                 MainScreen(

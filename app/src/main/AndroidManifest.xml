@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:name=".app.MainApplication"
         android:allowBackup="true"
@@ -17,8 +19,8 @@
             android:name=".app.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Podcast">
+            android:theme="@style/Theme.Podcast"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

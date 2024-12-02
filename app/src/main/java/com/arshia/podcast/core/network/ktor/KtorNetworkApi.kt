@@ -6,11 +6,13 @@ import com.arshia.podcast.core.model.AuthParameters
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
+import io.ktor.http.Parameters
 import io.ktor.http.path
 
 class KtorNetworkApi(
@@ -21,14 +23,22 @@ class KtorNetworkApi(
     var token = userDataRepositoryImp.userData.asLiveData()
 
     override suspend fun login(authParameters: AuthParameters): HttpResponse =
-        client.post {
-            append(url = "login", authParameters = authParameters)
-        }.body()
+        client.submitForm(
+            url = "login",
+            formParameters = Parameters.build {
+                append("user_name", authParameters.username)
+                append("password", authParameters.password)
+            }
+        ).body()
 
     override suspend fun register(authParameters: AuthParameters): HttpResponse =
-        client.post {
-            append(url = "register", authParameters = authParameters)
-        }.body()
+        client.submitForm(
+            url = "register",
+            formParameters = Parameters.build {
+                append("user_name", authParameters.username)
+                append("password", authParameters.password)
+            }
+        ).body()
 
     override suspend fun logout(): HttpResponse =
         client.post {
@@ -40,9 +50,9 @@ class KtorNetworkApi(
             append(url = "book", token = token.value?.authToken)
         }
 
-    override suspend fun getBookDetails(): HttpResponse =
+    override suspend fun getBookDetails(id: Int): HttpResponse =
         client.get {
-            append(url = "book/1", token = token.value?.authToken)
+            append(url = "book/{id}", token = token.value?.authToken)
         }.body()
 
 }
@@ -50,14 +60,9 @@ class KtorNetworkApi(
 fun HttpRequestBuilder.append(
     url: String,
     token: String? = null,
-    authParameters: AuthParameters? = null
 ) {
     url {
         path(url)
-        authParameters?.let {
-            parameters.append(name = "user_name", value = authParameters.username)
-            parameters.append(name = "password", value = authParameters.password)
-        }
     }
     token?.let {
         headers {

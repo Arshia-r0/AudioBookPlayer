@@ -1,8 +1,9 @@
-package com.arshia.podcast.feature.auth
+package com.arshia.podcast.feature.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -23,16 +24,18 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AuthScreen(
-    viewModel: AuthScreenViewModel = koinViewModel(),
+fun LoginScreen(
+    toRegisterScreen: () -> Unit = {},
+    viewModel: LoginScreenViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState
+    val errorMessage by viewModel.errorMessage
     var usernameField by viewModel.usernameField
     var passwordField by viewModel.passwordField
     Box(
         contentAlignment = Alignment.Center,
     ) {
-        if (uiState is AuthScreenUiState.Loading) {
+        if (uiState is LoginScreenUiState.Loading) {
             CircularProgressIndicator()
         }
         Column(
@@ -45,20 +48,24 @@ fun AuthScreen(
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
                 .then(
-                    if (uiState is AuthScreenUiState.Loading) Modifier.alpha(0.7f)
+                    if (uiState is LoginScreenUiState.Loading) Modifier.alpha(0.7f)
                     else Modifier
                 )
         ) {
             Text(
-                text = "Log into your account",
-                style = MaterialTheme.typography.headlineMedium
+                text = "Login",
+                style = MaterialTheme.typography.headlineMedium,
             )
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = errorMessage ?: "",
+                color = MaterialTheme.colorScheme.error,
+            )
             OutlinedTextField(
                 value = usernameField,
                 onValueChange = { usernameField = it },
                 singleLine = true,
-                label = { Text("username") }
+                label = { Text("username") },
             )
             OutlinedTextField(
                 value = passwordField,
@@ -67,10 +74,19 @@ fun AuthScreen(
                 visualTransformation = PasswordVisualTransformation(),
                 label = { Text("password") }
             )
-            Button(
-                onClick = { viewModel.login() }
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Text(text = "login")
+                Button(
+                    onClick = { viewModel.login() }
+                ) {
+                    Text(text = "login")
+                }
+                Button(
+                    onClick = toRegisterScreen,
+                ) {
+                    Text(text = "register here")
+                }
             }
         }
     }
