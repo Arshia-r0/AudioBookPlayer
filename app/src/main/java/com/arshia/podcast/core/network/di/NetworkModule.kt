@@ -6,6 +6,8 @@ import com.arshia.podcast.core.network.util.ConnectivityManagerNetworkMonitor
 import com.arshia.podcast.core.network.util.NetworkMonitor
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.headers
@@ -37,11 +39,22 @@ val networkModule = module {
                 }
             }
             install(ContentNegotiation) {
-                json(Json {
-                    prettyPrint = true
-                    isLenient = true
-                    allowTrailingComma = true
-                })
+                json(
+                    Json {
+                        prettyPrint = true
+                        isLenient = true
+                        allowTrailingComma = true
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+            HttpResponseValidator {
+                handleResponseExceptionWithRequest { exception, request ->
+                    val clientException = exception as? ClientRequestException
+                        ?: return@handleResponseExceptionWithRequest
+                    val exceptionResponse = clientException.response
+                    TODO("handle 401")
+                }
             }
         }
     }

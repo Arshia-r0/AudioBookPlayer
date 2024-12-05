@@ -6,6 +6,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
+    isOffline: Boolean,
     viewModel: MainScreenViewModel = koinViewModel(),
     toPlayerScreen: () -> Unit = {},
 ) {

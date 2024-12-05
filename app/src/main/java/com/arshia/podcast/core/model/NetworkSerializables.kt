@@ -15,6 +15,11 @@ data class AuthResponse(
 )
 
 @Serializable
+data class AuthError(
+    val message: String
+)
+
+@Serializable
 data class BookResponse(
     val books: List<Book>,
 )

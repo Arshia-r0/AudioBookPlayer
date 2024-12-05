@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.arshia.podcast.core.network.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 @Composable
@@ -37,7 +38,8 @@ class PodcastAppState(
     coroutineScope: CoroutineScope,
 ) {
 
-    val isOnline = networkMonitor.isOnline
+    val isOffline = networkMonitor.isOnline
+        .map(Boolean::not)
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),

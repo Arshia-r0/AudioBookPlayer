@@ -2,6 +2,7 @@ package com.arshia.podcast.core.network.util
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest.Builder
@@ -13,44 +14,48 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 class ConnectivityManagerNetworkMonitor(
-    context: Context
+    private val context: Context
 ) : NetworkMonitor {
 
-    override val isOnline: Flow<Boolean> = callbackFlow {
-        val connectivityManager = context.getSystemService<ConnectivityManager>()
-        if (connectivityManager == null) {
-            channel.trySend(false)
-            channel.close()
-            return@callbackFlow
-        }
-
-        val callback = object : ConnectivityManager.NetworkCallback() {
-
-            private val networks = mutableSetOf<Network>()
-
-            override fun onAvailable(network: Network) {
-                networks += network
-                channel.trySend(true)
+    override val isOnline: Flow<Boolean>
+        get() = callbackFlow {
+            val connectivityManager = context.getSystemService<ConnectivityManager>()
+            if (connectivityManager == null) {
+                channel.trySend(false)
+                channel.close()
+                return@callbackFlow
             }
 
-            override fun onLost(network: Network) {
-                networks -= network
-                channel.trySend(networks.isNotEmpty())
+            val callback = object : NetworkCallback() {
+
+                override fun onUnavailable() {
+                    super.onUnavailable()
+                    trySend(false)
+                }
+
+                override fun onLost(network: Network) {
+                    super.onLost(network)
+                    trySend(false)
+                }
+
+                override fun onAvailable(network: Network) {
+                    super.onAvailable(network)
+                    trySend(true)
+                }
+            }
+
+            val request = Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build()
+            connectivityManager.registerNetworkCallback(request, callback)
+
+            channel.trySend(connectivityManager.isCurrentlyConnected())
+
+            awaitClose {
+                connectivityManager.unregisterNetworkCallback(callback)
             }
         }
-
-        val request = Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .build()
-        connectivityManager.registerNetworkCallback(request, callback)
-
-        channel.trySend(connectivityManager.isCurrentlyConnected())
-
-        awaitClose {
-            connectivityManager.unregisterNetworkCallback(callback)
-        }
-    }
-
+    
     @Suppress("DEPRECATION")
     private fun ConnectivityManager.isCurrentlyConnected() = when {
         VERSION.SDK_INT >= VERSION_CODES.M ->

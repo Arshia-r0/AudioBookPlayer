@@ -24,6 +24,9 @@ class LoginScreenViewModel(
             errorMessage.value = "Username and Password fields are required"
             return
         }
+        if (passwordField.value.length < 8) {
+            errorMessage.value = "Password must be at least 8 characters long."
+        }
         viewModelScope.launch {
             authRepository.login(
                 AuthParameters(
@@ -38,7 +41,6 @@ class LoginScreenViewModel(
                         errorMessage.value = null
                         userDataRepository.setAuthToken(it.data?.accessToken)
                     }
-
                     else -> {
                         errorMessage.value = it.message
                         uiState.value = LoginScreenUiState.Input

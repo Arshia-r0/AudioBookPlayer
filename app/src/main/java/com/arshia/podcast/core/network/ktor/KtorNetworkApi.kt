@@ -1,8 +1,7 @@
 package com.arshia.podcast.core.network.ktor
 
-import androidx.lifecycle.asLiveData
-import com.arshia.podcast.core.data.userdata.UserDataRepositoryImp
 import com.arshia.podcast.core.model.AuthParameters
+import com.arshia.podcast.core.model.AuthToken
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
@@ -17,10 +16,7 @@ import io.ktor.http.path
 
 class KtorNetworkApi(
     private val client: HttpClient,
-    userDataRepositoryImp: UserDataRepositoryImp
 ) : NetworkApi {
-
-    var token = userDataRepositoryImp.userData.asLiveData()
 
     override suspend fun login(authParameters: AuthParameters): HttpResponse =
         client.submitForm(
@@ -40,19 +36,19 @@ class KtorNetworkApi(
             }
         ).body()
 
-    override suspend fun logout(): HttpResponse =
+    override suspend fun logout(token: AuthToken): HttpResponse =
         client.post {
-            append(url = "logout", token = token.value?.authToken)
+            append(url = "logout", token = token)
         }
 
-    override suspend fun getBooks(): HttpResponse =
+    override suspend fun getBooks(token: AuthToken): HttpResponse =
         client.get {
-            append(url = "book", token = token.value?.authToken)
+            append(url = "book", token = token)
         }
 
-    override suspend fun getBookDetails(id: Int): HttpResponse =
+    override suspend fun getBookDetails(id: Int, token: AuthToken): HttpResponse =
         client.get {
-            append(url = "book/{id}", token = token.value?.authToken)
+            append(url = "book/{id}", token = token)
         }.body()
 
 }
