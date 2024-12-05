@@ -1,4 +1,4 @@
-package com.arshia.podcast.core.common
+package com.arshia.podcast.core.common.util
 
 inline fun <reified T: Enum<T>> T.next(): T {
     val values = enumValues<T>()

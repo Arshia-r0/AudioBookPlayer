@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition {
             when(uiState) {
                 MainActivityUiState.Loading -> true
-                is MainActivityUiState.Success -> false
+                else -> false
             }
         }
 
@@ -48,13 +48,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             val appState = rememberPodcastAppState(networkMonitor)
             KoinAndroidContext {
-                if(uiState is MainActivityUiState.Success) {
+                if (uiState !is MainActivityUiState.Loading) {
                     PodcastTheme(
-                        theme = (uiState as MainActivityUiState.Success).data.theme
+                        theme = try {
+                            (uiState as MainActivityUiState.Authorized).data.theme
+                        } catch (e: Exception) {
+                            (uiState as MainActivityUiState.UnAuthorized).data.theme
+                        }
                     ) {
                         PodcastNavigation(
                             appState = appState,
-                            uiState = uiState as MainActivityUiState.Success
+                            uiState = uiState
                         )
                     }
                 }

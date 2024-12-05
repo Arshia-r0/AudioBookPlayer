@@ -13,7 +13,8 @@ class PodcastDataStore(
     val userData = dataStore.data.map {
         UserData(
             theme = it.theme,
-            authToken = it.authToken
+            authToken = it.authToken,
+            username = it.username,
         )
     }
 
@@ -23,9 +24,15 @@ class PodcastDataStore(
         }
     }
 
-    suspend fun setAuthToken(authToken: AuthToken?) {
+    suspend fun setAuthToken(authToken: AuthToken) {
         dataStore.updateData {
             it.copy(authToken = authToken)
+        }
+    }
+
+    suspend fun setUsername(username: String?) {
+        dataStore.updateData {
+            it.copy(username = username)
         }
     }
 

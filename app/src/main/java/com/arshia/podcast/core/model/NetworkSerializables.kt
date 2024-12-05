@@ -3,7 +3,7 @@ package com.arshia.podcast.core.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-typealias AuthToken = String
+typealias AuthToken = String?
 typealias BookId = Int
 typealias EpisodeId = Int
 
@@ -12,6 +12,11 @@ data class AuthResponse(
     @SerialName("access_token")
     val accessToken: AuthToken,
     val message: String
+)
+
+@Serializable
+data class ProfileResponse(
+    val username: String
 )
 
 @Serializable

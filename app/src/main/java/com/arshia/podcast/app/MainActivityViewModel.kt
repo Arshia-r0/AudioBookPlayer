@@ -2,19 +2,25 @@ package com.arshia.podcast.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arshia.podcast.core.data.userdata.UserDataRepositoryImp
+import com.arshia.podcast.core.data.AuthRepository
+import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.UserData
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class MainActivityViewModel(
-    userDataRepositoryImp: UserDataRepositoryImp,
+    private val userDataRepository: UserDataRepository,
+    private val authRepository: AuthRepository,
 ): ViewModel() {
 
-    val uiState: StateFlow<MainActivityUiState> = userDataRepositoryImp.userData.map {
-        MainActivityUiState.Success(it)
+    val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
+        if (userDataRepository.userData.first().authToken == null)
+            return@map MainActivityUiState.UnAuthorized(it)
+        userDataRepository.setUsername(authRepository.profile().first().data?.username)
+        MainActivityUiState.Authorized(it)
     }.stateIn(
         scope = viewModelScope,
         initialValue = MainActivityUiState.Loading,
@@ -25,5 +31,6 @@ class MainActivityViewModel(
 
 sealed interface MainActivityUiState {
     data object Loading : MainActivityUiState
-    data class Success(val data: UserData) : MainActivityUiState
+    data class UnAuthorized(val data: UserData) : MainActivityUiState
+    data class Authorized(val data: UserData) : MainActivityUiState
 }

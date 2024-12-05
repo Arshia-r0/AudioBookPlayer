@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arshia.podcast.core.common.Resource
-import com.arshia.podcast.core.data.networkapi.auth.AuthRepository
-import com.arshia.podcast.core.data.userdata.UserDataRepository
+import com.arshia.podcast.core.data.AuthRepository
+import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.AuthParameters
 import kotlinx.coroutines.launch
 
@@ -14,6 +14,7 @@ class LoginScreenViewModel(
     private val authRepository: AuthRepository,
     private val userDataRepository: UserDataRepository,
 ) : ViewModel() {
+    
     val uiState: MutableState<LoginScreenUiState> = mutableStateOf(LoginScreenUiState.Input)
     val errorMessage: MutableState<String?> = mutableStateOf(null)
     val usernameField = mutableStateOf("")
@@ -26,6 +27,7 @@ class LoginScreenViewModel(
         }
         if (passwordField.value.length < 8) {
             errorMessage.value = "Password must be at least 8 characters long."
+            return 
         }
         viewModelScope.launch {
             authRepository.login(

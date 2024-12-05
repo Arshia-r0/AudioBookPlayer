@@ -1,11 +1,11 @@
-package com.arshia.podcast.core.data.networkapi.auth
+package com.arshia.podcast.core.data.imp
 
 import com.arshia.podcast.core.common.Resource
-import com.arshia.podcast.core.data.userdata.UserDataRepositoryImp
+import com.arshia.podcast.core.data.AuthRepository
 import com.arshia.podcast.core.model.AuthError
 import com.arshia.podcast.core.model.AuthParameters
 import com.arshia.podcast.core.model.AuthResponse
-import com.arshia.podcast.core.model.AuthToken
+import com.arshia.podcast.core.model.ProfileResponse
 import com.arshia.podcast.core.network.ktor.NetworkApi
 import io.ktor.client.call.body
 import io.ktor.http.HttpStatusCode
@@ -16,6 +16,14 @@ class KtorAuthRepository(
     private val userDataRepositoryImp: UserDataRepositoryImp,
     private val networkApi: NetworkApi,
 ) : AuthRepository {
+
+    override suspend fun profile(): Flow<Resource<ProfileResponse>> = flow {
+        emit(Resource.Loading())
+        val response = networkApi.profile()
+        if (response.status != HttpStatusCode.OK)
+            emit(Resource.Error((response.body() as AuthError).message))
+        else emit(Resource.Success(response.body()))
+    }
 
     override suspend fun login(authParameters: AuthParameters): Flow<Resource<AuthResponse>> =
         flow {
@@ -35,9 +43,9 @@ class KtorAuthRepository(
             else emit(Resource.Success(response.body()))
         }
 
-    override suspend fun logout(token: AuthToken): Flow<Resource<Nothing>> = flow {
+    override suspend fun logout(): Flow<Resource<Nothing>> = flow {
         emit(Resource.Loading())
-        val response = networkApi.logout(token)
+        val response = networkApi.logout()
         if (response.status == HttpStatusCode.OK)
             emit(Resource.Error((response.body() as AuthError).message))
         else {

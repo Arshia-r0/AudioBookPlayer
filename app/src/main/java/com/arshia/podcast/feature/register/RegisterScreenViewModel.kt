@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arshia.podcast.core.common.Resource
-import com.arshia.podcast.core.data.networkapi.auth.KtorAuthRepository
-import com.arshia.podcast.core.data.userdata.UserDataRepository
+import com.arshia.podcast.core.data.UserDataRepository
+import com.arshia.podcast.core.data.imp.KtorAuthRepository
 import com.arshia.podcast.core.model.AuthParameters
 import kotlinx.coroutines.launch
 
@@ -23,6 +23,10 @@ class RegisterScreenViewModel(
     fun register() {
         if (usernameField.value.isEmpty() || passwordField.value.isEmpty()) {
             errorMessage.value = "Username and Password fields are required"
+            return
+        }
+        if (passwordField.value.length < 8) {
+            errorMessage.value = "Password must be at least 8 characters long."
             return
         }
         viewModelScope.launch {

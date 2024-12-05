@@ -1,4 +1,4 @@
-package com.arshia.podcast.core.data.userdata
+package com.arshia.podcast.core.data
 
 import com.arshia.podcast.core.model.AppTheme
 import com.arshia.podcast.core.model.AuthToken
@@ -11,6 +11,8 @@ interface UserDataRepository {
 
     suspend fun setAppTheme(theme: AppTheme)
 
-    suspend fun setAuthToken(authToken: AuthToken?)
+    suspend fun setAuthToken(authToken: AuthToken)
+
+    suspend fun setUsername(username: String?)
 
 }

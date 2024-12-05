@@ -76,7 +76,10 @@ fun RegisterScreen(
                 label = { Text("password") }
             )
             Row(
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 10.dp,
+                    alignment = Alignment.CenterHorizontally,
+                )
             ) {
                 Button(
                     onClick = { if (!isOffline) viewModel.register() }

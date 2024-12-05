@@ -25,7 +25,7 @@ import com.arshia.podcast.feature.register.RegisterScreen
 @Composable
 fun PodcastNavigation(
     appState: PodcastAppState,
-    uiState: MainActivityUiState.Success,
+    uiState: MainActivityUiState,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val navController = appState.navController
@@ -43,8 +43,8 @@ fun PodcastNavigation(
     ) { ip ->
         NavHost(
             navController = navController,
-            startDestination = if (uiState.data.authToken == null) PodcastRoutes.AuthRoute
-            else PodcastRoutes.MainRoute,
+            startDestination = if (uiState is MainActivityUiState.Authorized) PodcastRoutes.MainRoute
+            else PodcastRoutes.AuthRoute,
             modifier = Modifier.padding(ip)
         ) {
             navigation<PodcastRoutes.AuthRoute>(

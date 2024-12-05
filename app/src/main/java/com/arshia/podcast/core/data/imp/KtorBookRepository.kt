@@ -1,8 +1,8 @@
-package com.arshia.podcast.core.data.networkapi.book
+package com.arshia.podcast.core.data.imp
 
 import com.arshia.podcast.core.common.Resource
+import com.arshia.podcast.core.data.BookRepository
 import com.arshia.podcast.core.model.AuthError
-import com.arshia.podcast.core.model.AuthToken
 import com.arshia.podcast.core.model.BookDetailsResponse
 import com.arshia.podcast.core.model.BookResponse
 import com.arshia.podcast.core.network.ktor.NetworkApi
@@ -15,20 +15,17 @@ class KtorBookRepository(
     private val networkApi: NetworkApi
 ) : BookRepository {
 
-    override suspend fun getBooks(token: AuthToken): Flow<Resource<BookResponse>> = flow {
+    override suspend fun getBooks(): Flow<Resource<BookResponse>> = flow {
         emit(Resource.Loading())
-        val response = networkApi.getBooks(token)
+        val response = networkApi.getBooks()
         if (response.status != HttpStatusCode.OK)
             emit(Resource.Error((response.body() as AuthError).message))
         else emit(Resource.Success(response.body()))
     }
 
-    override suspend fun getBookDetails(
-        bookId: Int,
-        token: AuthToken
-    ): Flow<Resource<BookDetailsResponse>> = flow {
+    override suspend fun getBookDetails(bookId: Int): Flow<Resource<BookDetailsResponse>> = flow {
         emit(Resource.Loading())
-        val response = networkApi.getBookDetails(bookId, token)
+        val response = networkApi.getBookDetails(bookId)
         if (response.status != HttpStatusCode.OK)
             emit(Resource.Error((response.body() as AuthError).message))
         else emit(Resource.Success(response.body()))
