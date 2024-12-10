@@ -18,8 +18,11 @@ import io.ktor.client.request.headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.bind
@@ -37,8 +40,20 @@ val networkModule = module {
         bind<NetworkApi>()
     }
 
+    factory {
+        CoroutineScope(Dispatchers.IO)
+    }
+
     single {
         val userDataRepository by inject<UserDataRepository>()
+        val token = userDataRepository.userData
+            .map { it.authToken }
+            .stateIn(
+                scope = get(),
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null
+            )
+
         HttpClient(CIO) {
             defaultRequest {
                 url("http://10.0.2.2:8000/api/")
@@ -59,8 +74,8 @@ val networkModule = module {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        runBlocking {
-                            BearerTokens(userDataRepository.userData.first().authToken ?: "", "")
+                        token.value?.let {
+                            BearerTokens(it, "")
                         }
                     }
                 }

@@ -38,10 +38,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         splashScreen.setKeepOnScreenCondition {
-            when(uiState) {
-                MainActivityUiState.Loading -> true
-                else -> false
-            }
+            uiState == MainActivityUiState.Loading
         }
 
         enableEdgeToEdge()
