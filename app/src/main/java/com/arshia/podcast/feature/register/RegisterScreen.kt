@@ -25,7 +25,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RegisterScreen(
-    isOffline: Boolean,
     toLoginScreen: () -> Unit = {},
     viewModel: RegisterScreenViewModel = koinViewModel(),
 ) {
@@ -82,7 +81,7 @@ fun RegisterScreen(
                 )
             ) {
                 Button(
-                    onClick = { if (!isOffline) viewModel.register() }
+                    onClick = { viewModel.register() }
                 ) {
                     Text(text = "register")
                 }

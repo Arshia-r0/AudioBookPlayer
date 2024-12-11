@@ -52,20 +52,17 @@ fun PodcastNavigation(
             ) {
                 composable<PodcastRoutes.AuthRoute.RegisterRoute> {
                     RegisterScreen(
-                        isOffline = isOffline,
                         toLoginScreen = { navController.navigate(PodcastRoutes.AuthRoute.LoginRoute) }
                     )
                 }
                 composable<PodcastRoutes.AuthRoute.LoginRoute> {
                     LoginScreen(
-                        isOffline = isOffline,
                         toRegisterScreen = { navController.navigate(PodcastRoutes.AuthRoute.RegisterRoute) }
                     )
                 }
             }
             composable<PodcastRoutes.MainRoute> {
                 MainScreen(
-                    isOffline = isOffline,
                     toPlayerScreen = { navController.navigate(PodcastRoutes.MainRoute) }
                 )
             }

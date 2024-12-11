@@ -8,19 +8,32 @@ import com.arshia.podcast.core.common.Resource
 import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.data.imp.KtorAuthRepository
 import com.arshia.podcast.core.model.AuthParameters
+import com.arshia.podcast.core.network.util.NetworkMonitor
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class RegisterScreenViewModel(
     private val authRepository: KtorAuthRepository,
     private val userDataRepository: UserDataRepository,
+    networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
+    private val isOffline = networkMonitor.isOnline
+        .map(Boolean::not)
+        .stateIn(
+            scope = viewModelScope,
+            initialValue = false,
+            started = SharingStarted.WhileSubscribed(5000)
+        )
     val uiState: MutableState<RegisterScreenUiState> = mutableStateOf(RegisterScreenUiState.Input)
     val errorMessage: MutableState<String?> = mutableStateOf(null)
     val usernameField = mutableStateOf("")
     val passwordField = mutableStateOf("")
 
     fun register() {
+        if (isOffline.value) return
         if (usernameField.value.isEmpty() || passwordField.value.isEmpty()) {
             errorMessage.value = "Username and Password fields are required"
             return
