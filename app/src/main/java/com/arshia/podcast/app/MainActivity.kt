@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                         theme = try {
                             (uiState as MainActivityUiState.Authorized).data.theme
                         } catch (e: Exception) {
-                            (uiState as MainActivityUiState.UnAuthorized).data.theme
+                            (uiState as MainActivityUiState.Unauthorized).data.theme
                         }
                     ) {
                         PodcastNavigation(

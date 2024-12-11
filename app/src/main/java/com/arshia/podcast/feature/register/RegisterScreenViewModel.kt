@@ -55,6 +55,6 @@ class RegisterScreenViewModel(
 }
 
 sealed interface RegisterScreenUiState {
-    object Input : RegisterScreenUiState
-    object Loading : RegisterScreenUiState
+    data object Input : RegisterScreenUiState
+    data object Loading : RegisterScreenUiState
 }
