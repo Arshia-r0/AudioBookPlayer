@@ -1,4 +1,4 @@
-package com.arshia.podcast.feature.register
+package com.arshia.podcast.feature.auth.register
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

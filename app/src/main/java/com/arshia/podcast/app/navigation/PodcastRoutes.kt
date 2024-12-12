@@ -2,7 +2,7 @@ package com.arshia.podcast.app.navigation
 
 import kotlinx.serialization.Serializable
 
-interface PodcastRoutes {
+sealed interface PodcastRoutes {
 
     @Serializable
     data object AuthRoute {
@@ -14,8 +14,6 @@ interface PodcastRoutes {
     }
 
     @Serializable
-    object MainRoute
-    
-    @Serializable
-    object PLayerRoute
+    data object MainRoute
+
 }

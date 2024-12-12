@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 typealias AuthToken = String?
 typealias BookId = Int
-typealias EpisodeId = Int
 
 @Serializable
 data class AuthResponse(
@@ -40,5 +39,5 @@ data class Book(
 
 @Serializable
 data class BookDetailsResponse(
-    val episodes: Map<EpisodeId, String>
+    val episodes: List<String>
 )

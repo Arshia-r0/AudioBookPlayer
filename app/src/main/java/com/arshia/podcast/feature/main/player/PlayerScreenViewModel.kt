@@ -1,4 +1,4 @@
-package com.arshia.podcast.feature.player
+package com.arshia.podcast.feature.main.player
 
 import androidx.lifecycle.ViewModel
 
