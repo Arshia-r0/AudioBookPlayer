@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.arshia.podcast.core.datastore.PodcastDataStore
-import com.arshia.podcast.core.datastore.UserDataSerializer
+import com.arshia.podcast.core.datastore.PodcastPreferencesSerializer
 import com.arshia.podcast.core.model.UserData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +17,13 @@ val dataStoreModule = module {
 
     single<DataStore<UserData>> {
         DataStoreFactory.create(
-            serializer = UserDataSerializer(),
+            serializer = PodcastPreferencesSerializer(),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { androidContext().dataStoreFile("podcast.pb") }
         )
     }
 
     singleOf(::PodcastDataStore)
-    singleOf(::UserDataSerializer)
+    singleOf(::PodcastPreferencesSerializer)
 
 }

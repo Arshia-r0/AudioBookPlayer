@@ -5,6 +5,7 @@ import com.arshia.podcast.app.di.mainModule
 import com.arshia.podcast.core.data.di.dataModule
 import com.arshia.podcast.core.datastore.di.dataStoreModule
 import com.arshia.podcast.core.network.di.networkModule
+import com.arshia.podcast.core.service.di.serviceModule
 import com.arshia.podcast.feature.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -24,6 +25,7 @@ class MainApplication: Application() {
                 networkModule,
                 dataStoreModule,
                 dataModule,
+                serviceModule,
             )
         }
     }

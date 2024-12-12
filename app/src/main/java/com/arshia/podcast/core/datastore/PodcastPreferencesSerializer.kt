@@ -2,20 +2,19 @@ package com.arshia.podcast.core.datastore
 
 import android.util.Log
 import androidx.datastore.core.Serializer
-import com.arshia.podcast.core.model.UserData
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
 
 
-class UserDataSerializer: Serializer<UserData> {
+class PodcastPreferencesSerializer : Serializer<PodcastPreferences> {
 
-    override val defaultValue: UserData = UserData()
+    override val defaultValue: PodcastPreferences = PodcastPreferences()
 
-    override suspend fun readFrom(input: InputStream): UserData {
+    override suspend fun readFrom(input: InputStream): PodcastPreferences {
         return try {
             Json.decodeFromString(
-                deserializer = UserData.serializer(),
+                deserializer = PodcastPreferences.serializer(),
                 string = input.readBytes().decodeToString()
             )
         } catch (e: Exception) {
@@ -26,10 +25,10 @@ class UserDataSerializer: Serializer<UserData> {
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun writeTo(t: UserData, output: OutputStream) {
+    override suspend fun writeTo(t: PodcastPreferences, output: OutputStream) {
         output.write(
             Json.encodeToString(
-                serializer = UserData.serializer(),
+                serializer = PodcastPreferences.serializer(),
                 value = t
             ).encodeToByteArray()
         )
