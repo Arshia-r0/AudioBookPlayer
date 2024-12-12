@@ -39,5 +39,11 @@ data class Book(
 
 @Serializable
 data class BookDetailsResponse(
-    val episodes: List<String>
+    val episodes: List<Episode>
+)
+
+@Serializable
+data class Episode(
+    val name: String,
+    val duration: String,
 )

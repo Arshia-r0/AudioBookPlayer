@@ -1,10 +1,12 @@
 package com.arshia.podcast.feature.main.episode
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arshia.podcast.core.common.Resource
 import com.arshia.podcast.core.data.BookRepository
+import com.arshia.podcast.core.model.Episode
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -14,7 +16,7 @@ class EpisodeScreenViewModel(
 ) : ViewModel() {
 
     val uiState = mutableStateOf<EpisodeScreenUiState>(EpisodeScreenUiState.Loading)
-    val episodesList = mutableListOf<String>()
+    val episodesList = mutableStateListOf<Episode>()
 
     init {
         getEpisodes()

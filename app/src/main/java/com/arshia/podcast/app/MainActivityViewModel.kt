@@ -15,31 +15,24 @@ import kotlinx.coroutines.flow.stateIn
 class MainActivityViewModel(
     private val userDataRepository: UserDataRepository,
     private val authRepository: AuthRepository,
-): ViewModel() {
+) : ViewModel() {
 
     val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData
         .map { userData ->
             if (userData.authToken == null)
                 return@map MainActivityUiState.Unauthorized(userData)
-            var authorized = false
             authRepository.profile()
                 .collectLatest { response ->
-                    when (response) {
-                        is Resource.Loading -> {}
-                        is Resource.Error -> userDataRepository.setAuthToken(null)
-                        is Resource.Success -> {
-                            userDataRepository.setUsername(response.data?.username)
-                            authorized = true
-                        }
+                    if (response is Resource.Success) {
+                        userDataRepository.setUsername(response.data?.username)
                     }
                 }
-            if (authorized) MainActivityUiState.Authorized(userData)
-            else MainActivityUiState.Unauthorized(userData)
-    }.stateIn(
-        scope = viewModelScope,
-        initialValue = MainActivityUiState.Loading,
-        started = SharingStarted.WhileSubscribed(5_000)
-    )
+            MainActivityUiState.Authorized(userData)
+        }.stateIn(
+            scope = viewModelScope,
+            initialValue = MainActivityUiState.Loading,
+            started = SharingStarted.WhileSubscribed(5_000)
+        )
 
 }
 

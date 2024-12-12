@@ -21,7 +21,6 @@ class KtorAuthRepository(
         try {
             emit(Resource.Loading())
             val response = networkApi.profile()
-            println(response.body() as ProfileResponse)
             if (response.status != HttpStatusCode.OK)
                 emit(Resource.Error((response.body() as AuthError).message))
             else emit(Resource.Success(response.body()))

@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -19,11 +19,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arshia.podcast.core.model.Book
+import com.arshia.podcast.core.model.Episode
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -52,7 +54,7 @@ fun EpisodeScreen(
 private fun Content(
     ip: PaddingValues,
     isRefreshing: Boolean,
-    episodesList: MutableList<String>,
+    episodesList: SnapshotStateList<Episode>,
     refresh: () -> Unit,
 ) {
     PullToRefreshBox(
@@ -69,7 +71,7 @@ private fun Content(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(episodesList) {
+            itemsIndexed(episodesList) { i, episode ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -79,8 +81,12 @@ private fun Content(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = it,
+                        text = "${i + 1}. " + episode.name,
                         fontSize = 20.sp,
+                    )
+                    Text(
+                        text = episode.duration,
+                        fontSize = 15.sp,
                     )
                 }
             }
