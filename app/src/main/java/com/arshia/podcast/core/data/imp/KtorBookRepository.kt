@@ -16,19 +16,27 @@ class KtorBookRepository(
 ) : BookRepository {
 
     override suspend fun getBooks(): Flow<Resource<BookResponse>> = flow {
-        emit(Resource.Loading())
-        val response = networkApi.getBooks()
-        if (response.status != HttpStatusCode.OK)
-            emit(Resource.Error((response.body() as AuthError).message))
-        else emit(Resource.Success(response.body()))
+        try {
+            emit(Resource.Loading())
+            val response = networkApi.getBooks()
+            if (response.status != HttpStatusCode.OK)
+                emit(Resource.Error((response.body() as AuthError).message))
+            else emit(Resource.Success(response.body()))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.localizedMessage ?: "error"))
+        }
     }
 
     override suspend fun getBookDetails(bookId: Int): Flow<Resource<BookDetailsResponse>> = flow {
-        emit(Resource.Loading())
-        val response = networkApi.getBookDetails(bookId)
-        if (response.status != HttpStatusCode.OK)
-            emit(Resource.Error((response.body() as AuthError).message))
-        else emit(Resource.Success(response.body()))
+        try {
+            emit(Resource.Loading())
+            val response = networkApi.getBookDetails(bookId)
+            if (response.status != HttpStatusCode.OK)
+                emit(Resource.Error((response.body() as AuthError).message))
+            else emit(Resource.Success(response.body()))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.localizedMessage ?: "error"))
+        }
     }
 
 }

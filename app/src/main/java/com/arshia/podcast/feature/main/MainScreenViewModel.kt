@@ -5,27 +5,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.arshia.podcast.core.common.Resource
+import com.arshia.podcast.core.data.AuthRepository
 import com.arshia.podcast.core.data.BookRepository
 import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.Book
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainScreenViewModel(
-    private val userDataRepository: UserDataRepository,
+    userDataRepository: UserDataRepository,
     private val bookRepository: BookRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     val uiState = mutableStateOf<MainScreenUiState>(MainScreenUiState.Loading)
     val booksList = mutableStateListOf<Book>()
-    lateinit var username: String
+    var username = userDataRepository.userData
+        .map { it.username }
+        .stateIn(
+            scope = viewModelScope,
+            initialValue = null,
+            started = SharingStarted.WhileSubscribed(5000)
+        )
 
     init {
-        viewModelScope.launch {
-            launch { getBooks() }
-            launch { username = userDataRepository.userData.first().username ?: "" }
-        }
+        getBooks()
     }
 
     fun getBooks() {
@@ -35,13 +42,18 @@ class MainScreenViewModel(
                     is Resource.Loading -> uiState.value = MainScreenUiState.Loading
                     is Resource.Error -> uiState.value = MainScreenUiState.Error(it.message)
                     is Resource.Success -> {
-                        it.data?.books?.forEach { book ->
-                            booksList += book
-                        }
+                        booksList.removeAll { true }
+                        booksList.addAll(it.data?.books ?: emptyList())
                         uiState.value = MainScreenUiState.Success
                     }
                 }
             }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            authRepository.logout()
         }
     }
 

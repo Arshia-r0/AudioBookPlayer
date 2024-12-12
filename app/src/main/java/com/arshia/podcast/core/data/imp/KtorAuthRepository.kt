@@ -18,11 +18,16 @@ class KtorAuthRepository(
 ) : AuthRepository {
 
     override suspend fun profile(): Flow<Resource<ProfileResponse>> = flow {
-        emit(Resource.Loading())
-        val response = networkApi.profile()
-        if (response.status != HttpStatusCode.OK)
-            emit(Resource.Error((response.body() as AuthError).message))
-        else emit(Resource.Success(response.body()))
+        try {
+            emit(Resource.Loading())
+            val response = networkApi.profile()
+            println(response.body() as ProfileResponse)
+            if (response.status != HttpStatusCode.OK)
+                emit(Resource.Error((response.body() as AuthError).message))
+            else emit(Resource.Success(response.body()))
+        } catch (e: Exception) {
+            emit(Resource.Error(message = e.localizedMessage ?: "error"))
+        }
     }
 
     override suspend fun login(authParameters: AuthParameters): Flow<Resource<AuthResponse>> =
@@ -36,21 +41,30 @@ class KtorAuthRepository(
 
     override suspend fun register(authParameters: AuthParameters): Flow<Resource<AuthResponse>> =
         flow {
-        emit(Resource.Loading())
-            val response = networkApi.register(authParameters)
-            if (response.status != HttpStatusCode.OK)
-                emit(Resource.Error((response.body() as AuthError).message))
-            else emit(Resource.Success(response.body()))
+            try {
+                emit(Resource.Loading())
+                val response = networkApi.register(authParameters)
+                if (response.status != HttpStatusCode.OK)
+                    emit(Resource.Error((response.body() as AuthError).message))
+                else emit(Resource.Success(response.body()))
+            } catch (e: Exception) {
+                emit(Resource.Error(message = e.localizedMessage ?: "error"))
+            }
         }
 
     override suspend fun logout(): Flow<Resource<Nothing>> = flow {
-        emit(Resource.Loading())
-        val response = networkApi.logout()
-        if (response.status == HttpStatusCode.OK)
-            emit(Resource.Error((response.body() as AuthError).message))
-        else {
-            userDataRepositoryImp.setAuthToken(null)
-            emit(Resource.Success(null))
+        try {
+            emit(Resource.Loading())
+            val response = networkApi.logout()
+            if (response.status == HttpStatusCode.OK)
+                emit(Resource.Error((response.body() as AuthError).message))
+            else {
+                userDataRepositoryImp.setAuthToken(null)
+                emit(Resource.Success(null))
+            }
+        } catch (e: Exception) {
+            println(e.localizedMessage ?: "")
+            emit(Resource.Error(message = e.localizedMessage ?: "error"))
         }
     }
 

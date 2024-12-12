@@ -17,18 +17,24 @@ class MainActivityViewModel(
     private val authRepository: AuthRepository,
 ): ViewModel() {
 
-    val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData.map {
-        if (it.authToken == null)
-            return@map MainActivityUiState.Unauthorized(it)
-        authRepository.profile()
-            .collectLatest { r ->
-                when (r) {
-                    is Resource.Loading -> {}
-                    is Resource.Error -> userDataRepository.setAuthToken(null)
-                    is Resource.Success -> userDataRepository.setUsername(it.username)
+    val uiState: StateFlow<MainActivityUiState> = userDataRepository.userData
+        .map { userData ->
+            if (userData.authToken == null)
+                return@map MainActivityUiState.Unauthorized(userData)
+            var authorized = false
+            authRepository.profile()
+                .collectLatest { response ->
+                    when (response) {
+                        is Resource.Loading -> {}
+                        is Resource.Error -> userDataRepository.setAuthToken(null)
+                        is Resource.Success -> {
+                            userDataRepository.setUsername(response.data?.username)
+                            authorized = true
+                        }
+                    }
                 }
-            }
-        MainActivityUiState.Authorized(it)
+            if (authorized) MainActivityUiState.Authorized(userData)
+            else MainActivityUiState.Unauthorized(userData)
     }.stateIn(
         scope = viewModelScope,
         initialValue = MainActivityUiState.Loading,

@@ -3,6 +3,7 @@ package com.arshia.podcast.core.network.ktor
 import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.AuthParameters
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -29,7 +30,7 @@ class KtorClient(
 ) : NetworkApi {
 
     @OptIn(ExperimentalSerializationApi::class)
-    private val client = HttpClient() {
+    private val client = HttpClient(CIO) {
         defaultRequest {
             url("http://10.0.2.2:8000/api/")
             headers {
@@ -46,6 +47,7 @@ class KtorClient(
                 }
             )
         }
+        expectSuccess = true
         HttpResponseValidator {
             handleResponseExceptionWithRequest { exception, _ ->
                 val clientException = exception as? ClientRequestException
