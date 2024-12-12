@@ -1,5 +1,6 @@
 package com.arshia.podcast.feature.main.episode
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,11 +32,13 @@ fun EpisodeScreen(
     book: Book,
     ip: PaddingValues,
     viewModel: EpisodeScreenViewModel = koinViewModel(parameters = { parametersOf(book.bookId) }),
+    toBookScreen: () -> Unit,
 ) {
     val uiState by viewModel.uiState
     val episodesList = viewModel.episodesList
     var isRefreshing by remember { mutableStateOf(false) }
     LaunchedEffect(uiState) { isRefreshing = uiState is EpisodeScreenUiState.Loading }
+    BackHandler { toBookScreen() }
     Content(
         ip = ip,
         isRefreshing = isRefreshing,
@@ -50,7 +53,6 @@ private fun Content(
     ip: PaddingValues,
     isRefreshing: Boolean,
     episodesList: MutableList<String>,
-
     refresh: () -> Unit,
 ) {
     PullToRefreshBox(

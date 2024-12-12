@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arshia.podcast.app.app.PodcastAppState
+import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.feature.main.book.BookScreen
 import com.arshia.podcast.feature.main.episode.EpisodeScreen
 import org.koin.androidx.compose.koinViewModel
@@ -45,7 +46,9 @@ fun MainScreen(
         snackbarHostState = snackbarHostState,
         scaffoldState = scaffoldState,
         viewModel = viewModel,
-        logout = { viewModel.logout() }
+        logout = { viewModel.logout() },
+        toBookScreen = { viewModel.toBookScreen() },
+        toEpisodeScreen = { book -> viewModel.toEpisodeScreen(book) },
     )
 }
 
@@ -59,6 +62,8 @@ private fun Content(
     scaffoldState: BottomSheetScaffoldState,
     viewModel: MainScreenViewModel,
     logout: () -> Unit,
+    toEpisodeScreen: (Book) -> Unit,
+    toBookScreen: () -> Unit,
 ) {
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     LaunchedEffect(isOffline) {
@@ -84,14 +89,13 @@ private fun Content(
         when (uiState) {
             is MainScreenUiState.Book -> BookScreen(
                 ip = ip,
-                toEpisodeScreen = { book ->
-                    viewModel.toEpisodeScreen(book)
-                }
+                toEpisodeScreen = toEpisodeScreen,
             )
 
             is MainScreenUiState.Episode -> EpisodeScreen(
                 ip = ip,
-                book = uiState.book
+                book = uiState.book,
+                toBookScreen = toBookScreen
             )
         }
     }

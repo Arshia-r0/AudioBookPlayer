@@ -38,6 +38,10 @@ class MainScreenViewModel(
         uiState.value = MainScreenUiState.Episode(book)
     }
 
+    fun toBookScreen() {
+        uiState.value = MainScreenUiState.Book
+    }
+
 }
 
 sealed interface MainScreenUiState {
