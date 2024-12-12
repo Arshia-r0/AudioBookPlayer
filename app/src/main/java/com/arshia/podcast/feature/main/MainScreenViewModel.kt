@@ -3,6 +3,7 @@ package com.arshia.podcast.feature.main
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arshia.podcast.core.data.AudioBookController
 import com.arshia.podcast.core.data.AuthRepository
 import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.Book
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class MainScreenViewModel(
     userDataRepository: UserDataRepository,
     private val authRepository: AuthRepository,
+    private val audioBookController: AudioBookController,
 ) : ViewModel() {
 
 

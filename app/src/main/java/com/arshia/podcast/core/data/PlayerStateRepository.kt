@@ -9,6 +9,6 @@ interface PlayerStateRepository {
 
     val playerState: Flow<PlayerState>
 
-    suspend fun setCurrentPlayerState(currentEpisode: Episode, currentBook: Book)
+    suspend fun setCurrentPlayerState(currentEpisode: Episode, currentBook: Book, position: Long)
 
 }

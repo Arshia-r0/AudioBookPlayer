@@ -18,6 +18,7 @@ class PodcastDataStore(
             username = it.username,
             currentEpisode = it.currentEpisode,
             currentBook = it.currentBook,
+            position = it.position,
         )
     }
 
@@ -39,11 +40,12 @@ class PodcastDataStore(
         }
     }
 
-    suspend fun setCurrentPlayerState(currentEpisode: Episode, currentBook: Book) {
+    suspend fun setCurrentPlayerState(currentEpisode: Episode, currentBook: Book, position: Long) {
         dataStore.updateData {
             it.copy(
                 currentEpisode = currentEpisode,
-                currentBook = currentBook
+                currentBook = currentBook,
+                position = position,
             )
         }
     }

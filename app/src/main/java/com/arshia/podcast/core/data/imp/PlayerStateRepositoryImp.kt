@@ -17,13 +17,19 @@ class PlayerStateRepositoryImp(
             PlayerState(
                 currentEpisode = it.currentEpisode,
                 currentBook = it.currentBook,
+                position = it.position,
             )
         }
 
-    override suspend fun setCurrentPlayerState(currentEpisode: Episode, currentBook: Book) =
+    override suspend fun setCurrentPlayerState(
+        currentEpisode: Episode,
+        currentBook: Book,
+        position: Long
+    ) =
         podcastDataStore.setCurrentPlayerState(
             currentEpisode = currentEpisode,
             currentBook = currentBook,
+            position = position,
         )
 
 }

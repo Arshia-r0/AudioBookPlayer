@@ -1,5 +1,6 @@
 package com.arshia.podcast.core.data.di
 
+import com.arshia.podcast.core.data.AudioBookController
 import com.arshia.podcast.core.data.AuthRepository
 import com.arshia.podcast.core.data.BookRepository
 import com.arshia.podcast.core.data.PlayerStateRepository
@@ -13,6 +14,8 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val dataModule = module {
+
+    singleOf(::AudioBookController)
 
     singleOf(::UserDataRepositoryImp) {
         bind<UserDataRepository>()

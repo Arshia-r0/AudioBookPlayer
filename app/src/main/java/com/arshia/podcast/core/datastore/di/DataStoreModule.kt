@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.arshia.podcast.core.datastore.PodcastDataStore
+import com.arshia.podcast.core.datastore.PodcastPreferences
 import com.arshia.podcast.core.datastore.PodcastPreferencesSerializer
-import com.arshia.podcast.core.model.UserData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,7 +15,7 @@ import org.koin.dsl.module
 
 val dataStoreModule = module {
 
-    single<DataStore<UserData>> {
+    single<DataStore<PodcastPreferences>> {
         DataStoreFactory.create(
             serializer = PodcastPreferencesSerializer(),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),

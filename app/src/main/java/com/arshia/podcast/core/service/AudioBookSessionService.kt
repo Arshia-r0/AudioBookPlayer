@@ -5,12 +5,14 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
-import com.arshia.podcast.core.data.PlayerStateRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
-class AudioBookSession(
-    private val playerStateRepository: PlayerStateRepository,
-) : MediaSessionService() {
+class AudioBookSessionService : MediaSessionService() {
 
+    private val job = SupervisorJob()
+    private val serviceScope = CoroutineScope(Dispatchers.IO + job)
     private var mediaSession: MediaSession? = null
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? =
@@ -40,6 +42,7 @@ class AudioBookSession(
         }
 //        playerStateRepository.setCurrentPlayerState()
         super.onDestroy()
+        job.cancel()
     }
 
 }

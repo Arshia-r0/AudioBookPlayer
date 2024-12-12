@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".core.service.AudioBookSession"
+            android:name=".core.service.AudioBookSessionService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="true"></service>
     </application>
