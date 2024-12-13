@@ -1,4 +1,4 @@
-package com.arshia.podcast.feature.main.book
+package com.arshia.podcast.feature.main.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,29 +18,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arshia.podcast.core.model.Book
-import org.koin.androidx.compose.koinViewModel
+import com.arshia.podcast.feature.main.BookScreenUiState
 
 @Composable
 fun BookScreen(
+    bookState: BookScreenUiState,
     ip: PaddingValues,
-    viewModel: BookScreenViewModel = koinViewModel(),
+    books: List<Book>,
+    refresh: () -> Unit,
     toEpisodeScreen: (Book) -> Unit,
 ) {
-    val booksList = viewModel.booksList
-    val uiState by viewModel.uiState
     var isRefreshing by remember { mutableStateOf(false) }
-    LaunchedEffect(uiState) { isRefreshing = uiState is ListScreenUiState.Loading }
+    LaunchedEffect(bookState) { isRefreshing = bookState is BookScreenUiState.Loading }
     Content(
         ip = ip,
         isRefreshing = isRefreshing,
-        booksList = booksList,
-        refresh = { viewModel.getBooks() },
+        books = books,
+        refresh = refresh,
         toEpisodeScreen = toEpisodeScreen,
     )
 }
@@ -50,7 +49,7 @@ fun BookScreen(
 fun Content(
     ip: PaddingValues,
     isRefreshing: Boolean,
-    booksList: SnapshotStateList<Book>,
+    books: List<Book>,
     refresh: () -> Unit,
     toEpisodeScreen: (Book) -> Unit,
 ) {
@@ -68,7 +67,7 @@ fun Content(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(booksList) {
+            items(books) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

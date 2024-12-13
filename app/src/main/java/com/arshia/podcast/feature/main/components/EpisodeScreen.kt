@@ -1,4 +1,4 @@
-package com.arshia.podcast.feature.main.episode
+package com.arshia.podcast.feature.main.components
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -15,37 +15,37 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.core.model.Episode
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import com.arshia.podcast.feature.main.EpisodeScreenUiState
 
 @Composable
 fun EpisodeScreen(
     book: Book,
+    episodeState: EpisodeScreenUiState,
     ip: PaddingValues,
-    viewModel: EpisodeScreenViewModel = koinViewModel(parameters = { parametersOf(book.bookId) }),
+    data: Map<Book, List<Episode>?>,
+    refresh: () -> Unit,
     toBookScreen: () -> Unit,
 ) {
-    val uiState by viewModel.uiState
-    val episodesList = viewModel.episodesList
+    val episodes by remember { derivedStateOf { data[book] } }
     var isRefreshing by remember { mutableStateOf(false) }
-    LaunchedEffect(uiState) { isRefreshing = uiState is EpisodeScreenUiState.Loading }
+    LaunchedEffect(episodeState) { isRefreshing = episodeState is EpisodeScreenUiState.Loading }
     BackHandler { toBookScreen() }
     Content(
         ip = ip,
+        episodes = episodes,
         isRefreshing = isRefreshing,
-        episodesList = episodesList,
-        refresh = { viewModel.getEpisodes() },
+        refresh = refresh,
     )
 }
 
@@ -54,7 +54,7 @@ fun EpisodeScreen(
 private fun Content(
     ip: PaddingValues,
     isRefreshing: Boolean,
-    episodesList: SnapshotStateList<Episode>,
+    episodes: List<Episode>?,
     refresh: () -> Unit,
 ) {
     PullToRefreshBox(
@@ -71,7 +71,7 @@ private fun Content(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            itemsIndexed(episodesList) { i, episode ->
+            itemsIndexed(episodes ?: emptyList()) { i, episode ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

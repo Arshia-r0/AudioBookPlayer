@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,9 +25,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arshia.podcast.app.app.PodcastAppState
+import com.arshia.podcast.core.audiobookcontroller.ControllerEvent
 import com.arshia.podcast.core.model.Book
-import com.arshia.podcast.feature.main.book.BookScreen
-import com.arshia.podcast.feature.main.episode.EpisodeScreen
+import com.arshia.podcast.core.model.Episode
+import com.arshia.podcast.feature.main.components.BookScreen
+import com.arshia.podcast.feature.main.components.EpisodeScreen
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,13 +41,29 @@ fun MainScreen(
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(snackbarHostState = snackbarHostState)
 ) {
     val uiState by viewModel.uiState
+    val bookState by viewModel.bookState
+    val episodeState by viewModel.episodeState
+    val data by viewModel.data
     val username by viewModel.username.collectAsStateWithLifecycle()
+    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    LaunchedEffect(isOffline) {
+        if (!isOffline) return@LaunchedEffect
+        snackbarHostState.showSnackbar(
+            message = "No internet connection",
+            duration = SnackbarDuration.Indefinite
+        )
+    }
     Content(
-        appState = appState,
         uiState = uiState,
         username = username,
         snackbarHostState = snackbarHostState,
         scaffoldState = scaffoldState,
+        bookState = bookState,
+        episodeState = episodeState,
+        data = data,
+        refreshBooks = { viewModel.getBooks() },
+        refreshEpisodes = { viewModel.getEpisodes() },
+        controllerEvent = { viewModel.controllerEvent(it) },
         logout = { viewModel.logout() },
         toBookScreen = { viewModel.toBookScreen() },
         toEpisodeScreen = { book -> viewModel.toEpisodeScreen(book) },
@@ -54,23 +73,21 @@ fun MainScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
-    appState: PodcastAppState,
     uiState: MainScreenUiState,
+    data: Map<Book, List<Episode>?>,
     username: String?,
     snackbarHostState: SnackbarHostState,
     scaffoldState: BottomSheetScaffoldState,
+    bookState: BookScreenUiState,
+    episodeState: EpisodeScreenUiState,
+    controllerEvent: (ControllerEvent) -> Unit,
+    refreshBooks: () -> Unit = {},
+    refreshEpisodes: () -> Unit = {},
     logout: () -> Unit,
     toEpisodeScreen: (Book) -> Unit,
     toBookScreen: () -> Unit,
 ) {
-    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
-    LaunchedEffect(isOffline) {
-        if (!isOffline) return@LaunchedEffect
-        snackbarHostState.showSnackbar(
-            message = "No internet connection",
-            duration = SnackbarDuration.Indefinite
-        )
-    }
+    val books by remember { derivedStateOf { data.keys.toList() } }
     BottomSheetScaffold(
         topBar = {
             MainTopBar(
@@ -87,13 +104,19 @@ private fun Content(
         when (uiState) {
             is MainScreenUiState.Book -> BookScreen(
                 ip = ip,
+                books = books,
+                bookState = bookState,
+                refresh = refreshBooks,
                 toEpisodeScreen = toEpisodeScreen,
             )
 
             is MainScreenUiState.Episode -> EpisodeScreen(
                 ip = ip,
                 book = uiState.book,
-                toBookScreen = toBookScreen
+                data = data,
+                episodeState = episodeState,
+                refresh = refreshEpisodes,
+                toBookScreen = toBookScreen,
             )
         }
     }
