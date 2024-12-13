@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.arshia.podcast.app.app.rememberPodcastAppState
 import com.arshia.podcast.app.navigation.PodcastNavigation
+import com.arshia.podcast.core.audiobookcontroller.AudioBookController
 import com.arshia.podcast.core.designsystem.theme.PodcastTheme
 import com.arshia.podcast.core.network.util.NetworkMonitor
 import kotlinx.coroutines.flow.onEach
@@ -22,9 +23,9 @@ import org.koin.androidx.compose.KoinAndroidContext
 
 class MainActivity : ComponentActivity() {
 
-    private val networkMonitor by inject<NetworkMonitor>()
+    private val networkMonitor: NetworkMonitor by inject()
 
-    private val viewModel by inject<MainActivityViewModel>()
+    private val viewModel: MainActivityViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -62,4 +63,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        inject<AudioBookController>()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val controller: AudioBookController by inject()
+        controller.release()
+    }
+
 }

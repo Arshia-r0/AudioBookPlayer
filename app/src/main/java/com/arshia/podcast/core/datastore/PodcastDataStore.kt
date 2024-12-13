@@ -40,12 +40,16 @@ class PodcastDataStore(
         }
     }
 
-    suspend fun setCurrentPlayerState(currentEpisode: Episode, currentBook: Book, position: Long) {
+    suspend fun setCurrentPlayerState(
+        currentEpisode: Episode?,
+        currentBook: Book?,
+        position: Long?
+    ) {
         dataStore.updateData {
             it.copy(
                 currentEpisode = currentEpisode,
                 currentBook = currentBook,
-                position = position,
+                position = position ?: 0,
             )
         }
     }

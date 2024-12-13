@@ -3,7 +3,8 @@ package com.arshia.podcast.feature.main
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.arshia.podcast.core.data.AudioBookController
+import com.arshia.podcast.core.audiobookcontroller.AudioBookController
+import com.arshia.podcast.core.audiobookcontroller.ControllerEvent
 import com.arshia.podcast.core.data.AuthRepository
 import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.Book
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 class MainScreenViewModel(
     userDataRepository: UserDataRepository,
     private val authRepository: AuthRepository,
-    private val audioBookController: AudioBookController,
+    audioBookController: AudioBookController,
 ) : ViewModel() {
 
 
@@ -28,6 +29,8 @@ class MainScreenViewModel(
             initialValue = null,
             started = SharingStarted.WhileSubscribed(5000)
         )
+
+    private val controller = audioBookController.Command()
 
 
     fun logout() {
@@ -43,6 +46,18 @@ class MainScreenViewModel(
     fun toBookScreen() {
         uiState.value = MainScreenUiState.Book
     }
+
+    fun controllerEvent(event: ControllerEvent) {
+        when (event) {
+            is ControllerEvent.Start -> controller.start(event.episode, event.book)
+            is ControllerEvent.Play -> controller.play
+            is ControllerEvent.Pause -> controller.pause
+            is ControllerEvent.Next -> controller.next
+            is ControllerEvent.Previous -> controller.previous
+            is ControllerEvent.Seek -> controller.seek(event.position)
+        }
+    }
+
 
 }
 
