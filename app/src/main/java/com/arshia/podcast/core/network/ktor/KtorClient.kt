@@ -1,5 +1,6 @@
 package com.arshia.podcast.core.network.ktor
 
+import com.arshia.podcast.core.common.BASE_URL
 import com.arshia.podcast.core.data.UserDataRepository
 import com.arshia.podcast.core.model.AuthParameters
 import io.ktor.client.HttpClient
@@ -32,7 +33,7 @@ class KtorClient(
     @OptIn(ExperimentalSerializationApi::class)
     private val client = HttpClient(CIO) {
         defaultRequest {
-            url("http://10.0.2.2:8000/api/")
+            url("$BASE_URL/")
             headers {
                 headers.append(HttpHeaders.Accept, "application/json")
             }

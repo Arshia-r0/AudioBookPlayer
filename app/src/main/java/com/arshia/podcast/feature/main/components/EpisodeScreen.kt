@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arshia.podcast.core.audiobookcontroller.ControllerEvent
 import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.core.model.Episode
 import com.arshia.podcast.feature.main.EpisodeScreenUiState
@@ -33,6 +34,7 @@ fun EpisodeScreen(
     episodeState: EpisodeScreenUiState,
     ip: PaddingValues,
     episodes: List<Episode>,
+    controllerEvent: (ControllerEvent) -> Unit,
     refresh: () -> Unit,
     toBookScreen: () -> Unit,
 ) {
@@ -41,9 +43,11 @@ fun EpisodeScreen(
     BackHandler { toBookScreen() }
     Content(
         ip = ip,
+        book = book,
         episodes = episodes,
         isRefreshing = isRefreshing,
         refresh = refresh,
+        controllerEvent = controllerEvent,
     )
 }
 
@@ -51,8 +55,10 @@ fun EpisodeScreen(
 @Composable
 private fun Content(
     ip: PaddingValues,
+    book: Book,
     isRefreshing: Boolean,
     episodes: List<Episode>,
+    controllerEvent: (ControllerEvent) -> Unit,
     refresh: () -> Unit,
 ) {
     PullToRefreshBox(
@@ -73,7 +79,16 @@ private fun Content(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { }
+                        .clickable {
+                            controllerEvent(
+                                ControllerEvent.Start(
+                                    episode,
+                                    book,
+                                    i + 1,
+                                    episodes.size
+                                )
+                            )
+                        }
                         .padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,

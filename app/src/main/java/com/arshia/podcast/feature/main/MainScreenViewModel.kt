@@ -86,6 +86,7 @@ class MainScreenViewModel(
 
     fun toEpisodeScreen(book: Book) {
         uiState.value = MainScreenUiState.Episode(book)
+        getEpisodes()
     }
 
     fun toBookScreen() {
@@ -94,7 +95,12 @@ class MainScreenViewModel(
 
     fun controllerEvent(event: ControllerEvent) {
         when (event) {
-            is ControllerEvent.Start -> controller.start(event.episode, event.book)
+            is ControllerEvent.Start -> controller.start(
+                event.episode,
+                event.book,
+                event.start,
+                event.count
+            )
             is ControllerEvent.Play -> controller.play
             is ControllerEvent.Pause -> controller.pause
             is ControllerEvent.Next -> controller.next

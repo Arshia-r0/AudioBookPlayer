@@ -9,14 +9,11 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,18 +42,18 @@ fun MainScreen(
     val books by viewModel.books
     val episodes by viewModel.episodes
     val username by viewModel.username.collectAsStateWithLifecycle()
-    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
-    LaunchedEffect(isOffline) {
-        if (!isOffline) return@LaunchedEffect
-        snackbarHostState.showSnackbar(
-            message = "No internet connection",
-            duration = SnackbarDuration.Indefinite
-        )
-    }
+//    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+//    LaunchedEffect(isOffline) {
+//        if (!isOffline) return@LaunchedEffect
+//        snackbarHostState.showSnackbar(
+//            message = "No internet connection",
+//            duration = SnackbarDuration.Indefinite
+//        )
+//    }
     Content(
         uiState = uiState,
         username = username,
-        snackbarHostState = snackbarHostState,
+//        snackbarHostState = snackbarHostState,
         scaffoldState = scaffoldState,
         bookState = bookState,
         books = books,
@@ -78,7 +75,7 @@ private fun Content(
     books: List<Book>,
     episodes: List<Episode>,
     username: String?,
-    snackbarHostState: SnackbarHostState,
+//    snackbarHostState: SnackbarHostState,
     scaffoldState: BottomSheetScaffoldState,
     bookState: BookScreenUiState,
     episodeState: EpisodeScreenUiState,
@@ -96,7 +93,7 @@ private fun Content(
                 logout = logout,
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+//        snackbarHost = { SnackbarHost(snackbarHostState) },
         sheetDragHandle = {},
         sheetPeekHeight = 100.dp,
         scaffoldState = scaffoldState,
@@ -118,6 +115,7 @@ private fun Content(
                 episodeState = episodeState,
                 refresh = refreshEpisodes,
                 toBookScreen = toBookScreen,
+                controllerEvent = controllerEvent,
             )
         }
     }
@@ -152,10 +150,6 @@ fun MainTopBar(
                         )
                     },
                     onClick = {}
-                )
-                DropdownMenuItem(
-                    text = { Text(text = "settings") },
-                    onClick = {},
                 )
                 DropdownMenuItem(
                     text = { Text(text = "logout") },
