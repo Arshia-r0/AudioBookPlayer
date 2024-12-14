@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,11 +32,10 @@ fun EpisodeScreen(
     book: Book,
     episodeState: EpisodeScreenUiState,
     ip: PaddingValues,
-    data: Map<Book, List<Episode>?>,
+    episodes: List<Episode>,
     refresh: () -> Unit,
     toBookScreen: () -> Unit,
 ) {
-    val episodes by remember { derivedStateOf { data[book] } }
     var isRefreshing by remember { mutableStateOf(false) }
     LaunchedEffect(episodeState) { isRefreshing = episodeState is EpisodeScreenUiState.Loading }
     BackHandler { toBookScreen() }
@@ -54,7 +52,7 @@ fun EpisodeScreen(
 private fun Content(
     ip: PaddingValues,
     isRefreshing: Boolean,
-    episodes: List<Episode>?,
+    episodes: List<Episode>,
     refresh: () -> Unit,
 ) {
     PullToRefreshBox(
@@ -71,7 +69,7 @@ private fun Content(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            itemsIndexed(episodes ?: emptyList()) { i, episode ->
+            itemsIndexed(episodes) { i, episode ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

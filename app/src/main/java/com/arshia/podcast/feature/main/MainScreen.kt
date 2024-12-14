@@ -17,7 +17,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +42,8 @@ fun MainScreen(
     val uiState by viewModel.uiState
     val bookState by viewModel.bookState
     val episodeState by viewModel.episodeState
-    val data by viewModel.data
+    val books by viewModel.books
+    val episodes by viewModel.episodes
     val username by viewModel.username.collectAsStateWithLifecycle()
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     LaunchedEffect(isOffline) {
@@ -59,8 +59,9 @@ fun MainScreen(
         snackbarHostState = snackbarHostState,
         scaffoldState = scaffoldState,
         bookState = bookState,
+        books = books,
         episodeState = episodeState,
-        data = data,
+        episodes = episodes,
         refreshBooks = { viewModel.getBooks() },
         refreshEpisodes = { viewModel.getEpisodes() },
         controllerEvent = { viewModel.controllerEvent(it) },
@@ -74,7 +75,8 @@ fun MainScreen(
 @Composable
 private fun Content(
     uiState: MainScreenUiState,
-    data: Map<Book, List<Episode>?>,
+    books: List<Book>,
+    episodes: List<Episode>,
     username: String?,
     snackbarHostState: SnackbarHostState,
     scaffoldState: BottomSheetScaffoldState,
@@ -87,7 +89,6 @@ private fun Content(
     toEpisodeScreen: (Book) -> Unit,
     toBookScreen: () -> Unit,
 ) {
-    val books by remember { derivedStateOf { data.keys.toList() } }
     BottomSheetScaffold(
         topBar = {
             MainTopBar(
@@ -113,7 +114,7 @@ private fun Content(
             is MainScreenUiState.Episode -> EpisodeScreen(
                 ip = ip,
                 book = uiState.book,
-                data = data,
+                episodes = episodes,
                 episodeState = episodeState,
                 refresh = refreshEpisodes,
                 toBookScreen = toBookScreen,

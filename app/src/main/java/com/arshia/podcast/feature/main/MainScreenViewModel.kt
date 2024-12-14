@@ -28,7 +28,8 @@ class MainScreenViewModel(
     val uiState = mutableStateOf<MainScreenUiState>(MainScreenUiState.Book)
     val bookState = mutableStateOf<BookScreenUiState>(BookScreenUiState.Loading)
     val episodeState = mutableStateOf<EpisodeScreenUiState>(EpisodeScreenUiState.Loading)
-    val data = mutableStateOf<Map<Book, List<Episode>?>>(emptyMap())
+    val books = mutableStateOf<List<Book>>(emptyList())
+    val episodes = mutableStateOf<List<Episode>>(emptyList())
     val username = userDataRepository.userData
         .map { it.username }
         .stateIn(
@@ -51,11 +52,7 @@ class MainScreenViewModel(
                     is Resource.Loading -> BookScreenUiState.Loading
                     is Resource.Error -> BookScreenUiState.Error(response.message)
                     is Resource.Success -> {
-                        data.value = buildMap {
-                            response.data?.books?.forEach { book ->
-                                put(book, data.value[book])
-                            }
-                        }
+                        books.value = response.data?.books ?: emptyList()
                         BookScreenUiState.Success
                     }
                 }
@@ -66,18 +63,14 @@ class MainScreenViewModel(
 
     fun getEpisodes() {
         viewModelScope.launch {
-            val book = (uiState as MainScreenUiState.Episode).book
+            val book = (uiState.value as MainScreenUiState.Episode).book
             bookRepository.getBookDetails(book.bookId)
                 .collectLatest { response ->
                     episodeState.value = when (response) {
                         is Resource.Loading -> EpisodeScreenUiState.Loading
                         is Resource.Error -> EpisodeScreenUiState.Error(response.message)
                         is Resource.Success -> {
-                            data.value = buildMap {
-                                data.value.forEach { (k, v) ->
-                                    put(k, if (k == book) response.data?.episodes else v)
-                                }
-                            }
+                            episodes.value = response.data?.episodes ?: emptyList()
                             EpisodeScreenUiState.Success
                         }
                     }
