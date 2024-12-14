@@ -37,12 +37,15 @@ class MainScreenViewModel(
             initialValue = null,
             started = SharingStarted.WhileSubscribed(5000)
         )
+    val playerState = mutableStateOf(PlayerState())
+    val playerTime = mutableStateOf<Int?>(null)
 
     private val controller = audioBookController.Command()
 
 
     init {
         getBooks()
+
     }
 
     fun getBooks() {
@@ -95,14 +98,31 @@ class MainScreenViewModel(
 
     fun controllerEvent(event: ControllerEvent) {
         when (event) {
-            is ControllerEvent.Start -> controller.start(
-                event.episode,
-                event.book,
-                event.start,
-                event.count
-            )
-            is ControllerEvent.Play -> controller.play
-            is ControllerEvent.Pause -> controller.pause
+            is ControllerEvent.Start -> {
+                controller.start(
+                    event.episode,
+                    event.book,
+                    event.start,
+                    event.count
+                )
+                playerState.value = playerState.value.copy(
+                    episode = event.episode,
+                    book = event.book,
+                    isPlaying = true,
+                )
+                playerTime.value = 0
+            }
+
+            is ControllerEvent.Play -> {
+                controller.play
+                playerState.value = playerState.value.copy(isPlaying = true)
+                playerTime.value = 0
+            }
+
+            is ControllerEvent.Pause -> {
+                controller.pause
+                playerState.value = playerState.value.copy(isPlaying = false)
+            }
             is ControllerEvent.Next -> controller.next
             is ControllerEvent.Previous -> controller.previous
             is ControllerEvent.Seek -> controller.seek(event.position)
@@ -127,3 +147,9 @@ sealed interface EpisodeScreenUiState {
     data object Success : EpisodeScreenUiState
     data class Error(val message: String? = null) : EpisodeScreenUiState
 }
+
+data class PlayerState(
+    val episode: Episode? = null,
+    val book: Book? = null,
+    val isPlaying: Boolean = false,
+)

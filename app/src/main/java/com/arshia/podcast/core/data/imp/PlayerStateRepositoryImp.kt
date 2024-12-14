@@ -2,7 +2,7 @@ package com.arshia.podcast.core.data.imp
 
 import com.arshia.podcast.core.data.PlayerStateRepository
 import com.arshia.podcast.core.datastore.PodcastDataStore
-import com.arshia.podcast.core.model.PlayerState
+import com.arshia.podcast.core.model.PlayerData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -10,20 +10,20 @@ class PlayerStateRepositoryImp(
     private val podcastDataStore: PodcastDataStore,
 ) : PlayerStateRepository {
 
-    override val playerState: Flow<PlayerState> = podcastDataStore.preferences
+    override val playerData: Flow<PlayerData> = podcastDataStore.preferences
         .map {
-            PlayerState(
+            PlayerData(
                 currentEpisode = it.currentEpisode,
                 currentBook = it.currentBook,
                 position = it.position,
             )
         }
 
-    override suspend fun setCurrentPlayerState(playerState: PlayerState) =
+    override suspend fun setCurrentPlayerState(playerData: PlayerData) =
         podcastDataStore.setCurrentPlayerState(
-            currentEpisode = playerState.currentEpisode,
-            currentBook = playerState.currentBook,
-            position = playerState.position,
+            currentEpisode = playerData.currentEpisode,
+            currentBook = playerData.currentBook,
+            position = playerData.position,
         )
 
 }

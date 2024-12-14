@@ -3,7 +3,6 @@ package com.arshia.podcast.feature.main.components
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +31,6 @@ import com.arshia.podcast.feature.main.EpisodeScreenUiState
 fun EpisodeScreen(
     book: Book,
     episodeState: EpisodeScreenUiState,
-    ip: PaddingValues,
     episodes: List<Episode>,
     controllerEvent: (ControllerEvent) -> Unit,
     refresh: () -> Unit,
@@ -42,7 +40,6 @@ fun EpisodeScreen(
     LaunchedEffect(episodeState) { isRefreshing = episodeState is EpisodeScreenUiState.Loading }
     BackHandler { toBookScreen() }
     Content(
-        ip = ip,
         book = book,
         episodes = episodes,
         isRefreshing = isRefreshing,
@@ -54,7 +51,6 @@ fun EpisodeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
-    ip: PaddingValues,
     book: Book,
     isRefreshing: Boolean,
     episodes: List<Episode>,
@@ -63,8 +59,7 @@ private fun Content(
 ) {
     PullToRefreshBox(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(ip),
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center,
         isRefreshing = isRefreshing,
         onRefresh = refresh

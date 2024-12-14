@@ -1,6 +1,5 @@
 package com.arshia.podcast.app.navigation
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,8 +9,8 @@ import com.arshia.podcast.app.app.PodcastAppState
 import com.arshia.podcast.feature.auth.login.LoginScreen
 import com.arshia.podcast.feature.auth.register.RegisterScreen
 import com.arshia.podcast.feature.main.MainScreen
+import com.arshia.podcast.feature.setting.SettingScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PodcastNavigation(
     appState: PodcastAppState,
@@ -40,9 +39,10 @@ fun PodcastNavigation(
             }
         }
         composable<PodcastRoutes.MainRoute> {
-            MainScreen(
-                appState = appState,
-            )
+            MainScreen(toSettingScreen = { navController.navigate(PodcastRoutes.SettingRoute) })
+        }
+        composable<PodcastRoutes.SettingRoute> {
+            SettingScreen()
         }
     }
 }

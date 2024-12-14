@@ -2,7 +2,6 @@ package com.arshia.podcast.feature.main.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,6 @@ import com.arshia.podcast.feature.main.BookScreenUiState
 @Composable
 fun BookScreen(
     bookState: BookScreenUiState,
-    ip: PaddingValues,
     books: List<Book>,
     refresh: () -> Unit,
     toEpisodeScreen: (Book) -> Unit,
@@ -36,7 +34,6 @@ fun BookScreen(
     var isRefreshing by remember { mutableStateOf(false) }
     LaunchedEffect(bookState) { isRefreshing = bookState is BookScreenUiState.Loading }
     Content(
-        ip = ip,
         isRefreshing = isRefreshing,
         books = books,
         refresh = refresh,
@@ -47,7 +44,6 @@ fun BookScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Content(
-    ip: PaddingValues,
     isRefreshing: Boolean,
     books: List<Book>,
     refresh: () -> Unit,
@@ -55,11 +51,10 @@ fun Content(
 ) {
     PullToRefreshBox(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(ip),
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center,
         isRefreshing = isRefreshing,
-        onRefresh = refresh
+        onRefresh = refresh,
     ) {
         LazyColumn(
             modifier = Modifier

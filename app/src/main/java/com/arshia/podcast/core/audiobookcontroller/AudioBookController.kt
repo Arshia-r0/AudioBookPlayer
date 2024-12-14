@@ -9,20 +9,13 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.arshia.podcast.core.common.BASE_URL
-import com.arshia.podcast.core.data.PlayerStateRepository
 import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.core.model.Episode
-import com.arshia.podcast.core.model.PlayerState
 import com.arshia.podcast.core.service.AudioBookSessionService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 
 
 class AudioBookController(
     context: Context,
-    playerStateRepository: PlayerStateRepository,
-    scope: CoroutineScope,
 ) {
 
     private val sessionToken =
@@ -31,16 +24,6 @@ class AudioBookController(
     private val mediaController: MediaController?
         get() = if (controllerFuture.isDone) controllerFuture.get()
         else null
-    private val playerState = playerStateRepository.playerState
-        .stateIn(
-            scope = scope,
-            initialValue = PlayerState(),
-            started = SharingStarted.WhileSubscribed(5000)
-        )
-
-    init {
-        mediaController?.repeatMode = Player.REPEAT_MODE_ALL
-    }
 
     fun release() = MediaController.releaseFuture(controllerFuture)
 
@@ -50,13 +33,14 @@ class AudioBookController(
             mediaController?.apply {
                 repeat(count) {
                     setMediaItem(MediaItem.fromUri(Uri.parse("$BASE_URL/book/${book.bookId}/${start}")))
-                    prepare()
-                    playWhenReady = true
-                    repeat(start) { seekToNext() }
-                    addListener(object : Player.Listener {
-                        override fun onPlayerError(error: PlaybackException) {}
-                    })
                 }
+                repeatMode = Player.REPEAT_MODE_ALL
+                prepare()
+                repeat(start) { seekToNext() }
+                addListener(object : Player.Listener {
+                    override fun onPlayerError(error: PlaybackException) {}
+                })
+                play()
             }
         }
         val play = { mediaController?.play() }

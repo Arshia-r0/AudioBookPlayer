@@ -16,4 +16,7 @@ sealed interface PodcastRoutes {
     @Serializable
     data object MainRoute
 
+    @Serializable
+    data object SettingRoute
+
 }
