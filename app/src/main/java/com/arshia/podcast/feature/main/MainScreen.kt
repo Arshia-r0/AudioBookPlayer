@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,6 @@ import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.core.model.Episode
 import com.arshia.podcast.feature.main.components.BookScreen
 import com.arshia.podcast.feature.main.components.EpisodeScreen
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -51,15 +49,7 @@ fun MainScreen(
     val episodes by viewModel.episodes
     val username by viewModel.username.collectAsStateWithLifecycle()
     val playerState by viewModel.playerState
-    var playerTime by viewModel.playerTime
-    LaunchedEffect(playerTime) {
-        if (playerState.isPlaying) {
-            while (true) {
-                delay(1000)
-                playerTime = playerTime?.plus(1)
-            }
-        }
-    }
+    val playerTime by viewModel.playerTime.collectAsStateWithLifecycle()
     Content(
         uiState = uiState,
         username = username,
@@ -206,9 +196,9 @@ fun Player(
             Text(
                 text = playerTime?.convertToTime() ?: ""
             )
-            Text(
-                text = playerState.episode?.duration ?: ""
-            )
+//            Text(
+//                text = playerState.episode?.duration ?: ""
+//            )
         }
         Row(
             modifier = Modifier.fillMaxHeight(),

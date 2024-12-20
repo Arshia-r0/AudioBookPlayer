@@ -37,15 +37,18 @@ class MainScreenViewModel(
             initialValue = null,
             started = SharingStarted.WhileSubscribed(5000)
         )
-    val playerState = mutableStateOf(PlayerState())
-    val playerTime = mutableStateOf<Int?>(null)
+    val playerState = audioBookController.playerState
+    val playerTime = audioBookController.playerTime.stateIn(
+        scope = viewModelScope,
+        initialValue = 0,
+        started = SharingStarted.WhileSubscribed(5000),
+    )
 
     private val controller = audioBookController.Command()
 
 
     init {
         getBooks()
-
     }
 
     fun getBooks() {
@@ -99,32 +102,18 @@ class MainScreenViewModel(
     fun controllerEvent(event: ControllerEvent) {
         when (event) {
             is ControllerEvent.Start -> {
-                controller.start(
-                    event.episode,
-                    event.book,
-                    event.start,
-                    event.count
-                )
+                controller.start(event.book, event.start)
                 playerState.value = playerState.value.copy(
                     episode = event.episode,
                     book = event.book,
-                    isPlaying = true,
+                    number = event.start,
                 )
-                playerTime.value = 0
             }
 
-            is ControllerEvent.Play -> {
-                controller.play
-                playerState.value = playerState.value.copy(isPlaying = true)
-                playerTime.value = 0
-            }
-
-            is ControllerEvent.Pause -> {
-                controller.pause
-                playerState.value = playerState.value.copy(isPlaying = false)
-            }
-            is ControllerEvent.Next -> controller.next
-            is ControllerEvent.Previous -> controller.previous
+            is ControllerEvent.Play -> controller.play()
+            is ControllerEvent.Pause -> controller.pause()
+            is ControllerEvent.Next -> controller.next()
+            is ControllerEvent.Previous -> controller.previous()
             is ControllerEvent.Seek -> controller.seek(event.position)
         }
     }
@@ -151,5 +140,6 @@ sealed interface EpisodeScreenUiState {
 data class PlayerState(
     val episode: Episode? = null,
     val book: Book? = null,
+    val number: Int? = null,
     val isPlaying: Boolean = false,
 )

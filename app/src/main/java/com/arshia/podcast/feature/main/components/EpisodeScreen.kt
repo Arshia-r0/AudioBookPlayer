@@ -80,7 +80,6 @@ private fun Content(
                                     episode,
                                     book,
                                     i + 1,
-                                    episodes.size
                                 )
                             )
                         }

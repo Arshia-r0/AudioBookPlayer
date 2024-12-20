@@ -4,8 +4,7 @@ import com.arshia.podcast.core.model.Book
 import com.arshia.podcast.core.model.Episode
 
 sealed interface ControllerEvent {
-    data class Start(val episode: Episode, val book: Book, val start: Int, val count: Int) :
-        ControllerEvent
+    data class Start(val episode: Episode, val book: Book, val start: Int) : ControllerEvent
     data object Play : ControllerEvent
     data object Pause : ControllerEvent
     data object Next : ControllerEvent
